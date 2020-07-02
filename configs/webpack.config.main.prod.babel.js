@@ -1,18 +1,17 @@
 /**
  * Webpack config for production electron main process
  */
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv'
+import DeleteSourceMaps from '../internals/scripts/DeleteSourceMaps'
+import TerserPlugin from 'terser-webpack-plugin'
+import baseConfig from './webpack.config.base'
+import merge from 'webpack-merge'
+import path from 'path'
+import webpack from 'webpack'
 
-import path from 'path';
-import webpack from 'webpack';
-import merge from 'webpack-merge';
-import TerserPlugin from 'terser-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
-import DeleteSourceMaps from '../internals/scripts/DeleteSourceMaps';
-
-CheckNodeEnv('production');
-DeleteSourceMaps();
+CheckNodeEnv('production')
+DeleteSourceMaps()
 
 export default merge.smart(baseConfig, {
   devtool: process.env.DEBUG_PROD === 'true' ? 'source-map' : 'none',
@@ -42,8 +41,7 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new BundleAnalyzerPlugin({
-      analyzerMode:
-        process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
+      analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true',
     }),
 
@@ -70,7 +68,8 @@ export default merge.smart(baseConfig, {
    * https://github.com/webpack/webpack/issues/2010
    */
   node: {
+    /* eslint-disable @typescript-eslint/naming-convention */
     __dirname: false,
     __filename: false,
   },
-});
+})

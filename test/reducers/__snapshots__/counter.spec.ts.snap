@@ -6,20 +6,8 @@ Object {
 }
 `;
 
-exports[`reducers counter should handle INCREMENT_COUNTER 1`] = `
+exports[`reducers counter should handle counterMutations.increment 1`] = `
 Object {
   "value": 2,
-}
-`;
-
-exports[`reducers counter should handle initial state 1`] = `
-Object {
-  "value": 0,
-}
-`;
-
-exports[`reducers counter should handle unknown action type 1`] = `
-Object {
-  "value": 1,
 }
 `;

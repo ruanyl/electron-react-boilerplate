@@ -1,31 +1,25 @@
-import { AnyAction } from 'redux';
-import counterReducer, {
-  increment,
-  decrement,
-} from '../../app/features/counter/counterSlice';
+import { CounterModel, counterMutations } from '../../app/features/counter/Counter.model'
+import { app } from '../../app/store'
+
+function setup(initialState = { counter: { value: 1 } }) {
+  const store = app.createStore(initialState)
+  return {
+    store,
+  }
+}
 
 describe('reducers', () => {
   describe('counter', () => {
-    it('should handle initial state', () => {
-      expect(counterReducer(undefined, {} as AnyAction)).toMatchSnapshot();
-    });
-
-    it('should handle INCREMENT_COUNTER', () => {
-      expect(
-        counterReducer({ value: 1 }, { type: increment })
-      ).toMatchSnapshot();
-    });
+    it('should handle counterMutations.increment', () => {
+      const { store } = setup()
+      store.dispatch(counterMutations.increment())
+      expect(CounterModel.selectors.self(store.getState())).toMatchSnapshot()
+    })
 
     it('should handle DECREMENT_COUNTER', () => {
-      expect(
-        counterReducer({ value: 1 }, { type: decrement })
-      ).toMatchSnapshot();
-    });
-
-    it('should handle unknown action type', () => {
-      expect(
-        counterReducer({ value: 1 }, { type: 'unknown' })
-      ).toMatchSnapshot();
-    });
-  });
-});
+      const { store } = setup()
+      store.dispatch(counterMutations.decrement())
+      expect(CounterModel.selectors.self(store.getState())).toMatchSnapshot()
+    })
+  })
+})

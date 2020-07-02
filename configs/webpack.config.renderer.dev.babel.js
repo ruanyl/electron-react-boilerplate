@@ -5,39 +5,36 @@
  * https://webpack.js.org/concepts/hot-module-replacement/
  */
 
-import path from 'path';
-import fs from 'fs';
-import webpack from 'webpack';
-import chalk from 'chalk';
-import merge from 'webpack-merge';
-import { spawn, execSync } from 'child_process';
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+import { execSync, spawn } from 'child_process'
+
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv'
+import baseConfig from './webpack.config.base'
+import chalk from 'chalk'
+import fs from 'fs'
+import merge from 'webpack-merge'
+import path from 'path'
+import webpack from 'webpack'
 
 // When an ESLint server is running, we can't set the NODE_ENV so we'll check if it's
 // at the dev webpack config is not accidentally run in a production environment
 if (process.env.NODE_ENV === 'production') {
-  CheckNodeEnv('development');
+  CheckNodeEnv('development')
 }
 
-const port = process.env.PORT || 1212;
-const publicPath = `http://localhost:${port}/dist`;
-const dll = path.join(__dirname, '..', 'dll');
-const manifest = path.resolve(dll, 'renderer.json');
-const requiredByDLLConfig = module.parent.filename.includes(
-  'webpack.config.renderer.dev.dll'
-);
+const port = process.env.PORT || 1212
+const publicPath = `http://localhost:${port}/dist`
+const dll = path.join(__dirname, '..', 'dll')
+const manifest = path.resolve(dll, 'renderer.json')
+const requiredByDLLConfig = module.parent.filename.includes('webpack.config.renderer.dev.dll')
 
 /**
  * Warn if the DLL is not built
  */
 if (!requiredByDLLConfig && !(fs.existsSync(dll) && fs.existsSync(manifest))) {
   console.log(
-    chalk.black.bgYellow.bold(
-      'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"'
-    )
-  );
-  execSync('yarn build-dll');
+    chalk.black.bgYellow.bold('The DLL files are missing. Sit back while we build them for you with "yarn build-dll"')
+  )
+  execSync('yarn build-dll')
 }
 
 export default merge.smart(baseConfig, {
@@ -231,6 +228,7 @@ export default merge.smart(baseConfig, {
   ],
 
   node: {
+    /* eslint-disable @typescript-eslint/naming-convention */
     __dirname: false,
     __filename: false,
   },
@@ -257,15 +255,15 @@ export default merge.smart(baseConfig, {
     },
     before() {
       if (process.env.START_HOT) {
-        console.log('Starting Main Process...');
+        console.log('Starting Main Process...')
         spawn('npm', ['run', 'start-main-dev'], {
           shell: true,
           env: process.env,
           stdio: 'inherit',
         })
           .on('close', (code) => process.exit(code))
-          .on('error', (spawnError) => console.error(spawnError));
+          .on('error', (spawnError) => console.error(spawnError))
       }
     },
   },
-});
+})

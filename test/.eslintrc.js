@@ -1,20 +1,14 @@
 module.exports = {
-  extends: ['eslint-config-react-typescript/lib/react'],
   env: {
-    node: true,
-    browser: true,
+    'jest/globals': true,
   },
+  plugins: ['jest'],
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: './tsconfig.json',
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
-    },
-  },
-  settings: {
-    react: {
-      version: 'detect',
     },
   },
 }
