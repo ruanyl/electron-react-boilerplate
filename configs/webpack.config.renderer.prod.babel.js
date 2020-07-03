@@ -2,19 +2,20 @@
  * Build config for electron renderer process
  */
 
-import path from 'path';
-import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import merge from 'webpack-merge';
-import TerserPlugin from 'terser-webpack-plugin';
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
-import DeleteSourceMaps from '../internals/scripts/DeleteSourceMaps';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import CheckNodeEnv from '../internals/scripts/CheckNodeEnv'
+import DeleteSourceMaps from '../internals/scripts/DeleteSourceMaps'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
+import TerserPlugin from 'terser-webpack-plugin'
+import baseConfig from './webpack.config.base'
+import { getThemeVariables } from 'antd/dist/theme'
+import merge from 'webpack-merge'
+import path from 'path'
+import webpack from 'webpack'
 
-CheckNodeEnv('production');
-DeleteSourceMaps();
+CheckNodeEnv('production')
+DeleteSourceMaps()
 
 export default merge.smart(baseConfig, {
   devtool: process.env.DEBUG_PROD === 'true' ? 'source-map' : 'none',
@@ -33,27 +34,8 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
-      // Extract all .global.css to style.css as is
       {
-        test: /\.global\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: './',
-            },
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
-      },
-      // Pipe other styles through css modules and append to style.css
-      {
-        test: /^((?!\.global).)*\.css$/,
+        test: /\.css$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -67,55 +49,32 @@ export default merge.smart(baseConfig, {
               sourceMap: true,
             },
           },
+          'postcss-loader',
         ],
       },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
       {
-        test: /\.global\.(scss|sass)$/,
+        test: /\.less$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
           },
           {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              importLoaders: 1,
-            },
+            loader: 'css-loader', // translates CSS into CommonJS
           },
           {
-            loader: 'sass-loader',
+            loader: 'less-loader', // compiles Less to CSS
             options: {
-              sourceMap: true,
-            },
-          },
-        ],
-      },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[name]__[local]__[hash:base64:5]',
+              lessOptions: {
+                modifyVars: getThemeVariables({
+                  dark: true,
+                }),
+                javascriptEnabled: true,
               },
-              importLoaders: 1,
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
             },
           },
         ],
       },
+
       // WOFF Font
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
@@ -214,9 +173,8 @@ export default merge.smart(baseConfig, {
     }),
 
     new BundleAnalyzerPlugin({
-      analyzerMode:
-        process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
+      analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true',
     }),
   ],
-});
+})

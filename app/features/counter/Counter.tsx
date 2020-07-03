@@ -1,10 +1,11 @@
-import { CounterModel, counterEffects, counterMutations } from './Counter.model'
-import { useDispatch, useSelector } from 'react-redux'
-
-import { Link } from 'react-router-dom'
 import React from 'react'
-import routes from '../../constants/routes.json'
+import { Button } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import routes from '../../routeConfig'
 import styles from './Counter.css'
+import { counterEffects, CounterModel, counterMutations } from './Counter.model'
 
 export default function Counter() {
   const dispatch = useDispatch()
@@ -30,8 +31,7 @@ export default function Counter() {
         >
           <i className="fa fa-plus" />
         </button>
-        <button
-          className={styles.btn}
+        <Button
           onClick={() => {
             dispatch(counterMutations.decrement())
           }}
@@ -39,7 +39,7 @@ export default function Counter() {
           type="button"
         >
           <i className="fa fa-minus" />
-        </button>
+        </Button>
         <button
           className={styles.btn}
           onClick={() => {

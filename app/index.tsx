@@ -1,11 +1,10 @@
-import './app.global.css'
-
 import React, { Fragment } from 'react'
-import { app, history } from './store'
-
-import { AppContainer as ReactHotAppContainer } from 'react-hot-loader'
-import Root from './containers/Root'
 import { render } from 'react-dom'
+import { AppContainer as ReactHotAppContainer } from 'react-hot-loader'
+
+import './app.global.css'
+import Root from './containers/Root'
+import { app, history } from './store'
 
 const store = app.createStore()
 

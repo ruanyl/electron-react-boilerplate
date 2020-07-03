@@ -15,6 +15,8 @@ import merge from 'webpack-merge'
 import path from 'path'
 import webpack from 'webpack'
 
+const { getThemeVariables } = require('antd/dist/theme')
+
 // When an ESLint server is running, we can't set the NODE_ENV so we'll check if it's
 // at the dev webpack config is not accidentally run in a production environment
 if (process.env.NODE_ENV === 'production') {
@@ -59,21 +61,7 @@ export default merge.smart(baseConfig, {
   module: {
     rules: [
       {
-        test: /\.global\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
-      },
-      {
-        test: /^((?!\.global).)*\.css$/,
+        test: /\.css$/,
         use: [
           {
             loader: 'style-loader',
@@ -88,45 +76,28 @@ export default merge.smart(baseConfig, {
               importLoaders: 1,
             },
           },
+          'postcss-loader',
         ],
       },
-      // SASS support - compile all .global.scss files and pipe it to style.css
       {
-        test: /\.global\.(scss|sass)$/,
+        test: /\.less$/,
         use: [
           {
             loader: 'style-loader',
           },
           {
-            loader: 'css-loader',
+            loader: 'css-loader', // translates CSS into CommonJS
+          },
+          {
+            loader: 'less-loader', // compiles Less to CSS
             options: {
-              sourceMap: true,
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-      // SASS support - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.(scss|sass)$/,
-        use: [
-          {
-            loader: 'typings-for-css-modules-loader',
-          },
-          {
-            loader: 'typings-for-css-modules-loader',
-            options: {
-              modules: {
-                localIdentName: '[name]__[local]__[hash:base64:5]',
+              lessOptions: {
+                modifyVars: getThemeVariables({
+                  dark: true,
+                }),
+                javascriptEnabled: true,
               },
-              sourceMap: true,
-              importLoaders: 1,
             },
-          },
-          {
-            loader: 'sass-loader',
           },
         ],
       },

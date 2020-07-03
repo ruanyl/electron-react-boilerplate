@@ -2,9 +2,9 @@
  * Base webpack config used across other specific configs
  */
 
-import path from 'path';
-import webpack from 'webpack';
-import { dependencies as externals } from '../app/package.json';
+import { dependencies as externals } from '../app/package.json'
+import path from 'path'
+import webpack from 'webpack'
 
 export default {
   externals: [...Object.keys(externals || {})],
@@ -18,6 +18,16 @@ export default {
           loader: 'babel-loader',
           options: {
             cacheDirectory: true,
+            plugins: [
+              [
+                'import',
+                {
+                  libraryName: 'antd',
+                  libraryDirectory: 'es',
+                  style: true,
+                },
+              ],
+            ],
           },
         },
       },
@@ -45,4 +55,4 @@ export default {
 
     new webpack.NamedModulesPlugin(),
   ],
-};
+}
