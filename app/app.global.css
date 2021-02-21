@@ -1,0 +1,28 @@
+:global {
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+  .ant-tooltip-arrow-content {
+    background-color: #1e2125 !important;
+  }
+  .ant-tooltip-inner {
+    background-color: #1e2125 !important;
+  }
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: 'Nunito';
+}
+
+* {
+  box-sizing: border-box;
+}
